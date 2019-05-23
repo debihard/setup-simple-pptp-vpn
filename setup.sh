@@ -45,6 +45,8 @@ then
   exit 0
 fi
 
+network_interface=$(ip -o -4 route show to default | awk '{print $5}')
+
 apt-get update
 
 apt-get -y install pptpd || {
@@ -63,7 +65,7 @@ iptables -I INPUT -p tcp --dport 22 -j ACCEPT
 iptables -I INPUT -p tcp --dport 1723 -j ACCEPT
 #gre tunnel protocol
 iptables -I INPUT  --protocol 47 -j ACCEPT
-iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -d 0.0.0.0/0 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -d 0.0.0.0/0 -o $network_interface -j MASQUERADE
 #supposedly makes the vpn work better
 iptables -I FORWARD -s 192.168.2.0/24 -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j TCPMSS --set-mss 1356
 END
