@@ -18,6 +18,10 @@
 #    2014-09-18: Add help, allow custom username and password, thanks to dileep-p
 #    2015-01-25: Change external ip provider, thanks to theroyalstudent
 
+modprobe ip_nat_pptp
+modprobe pptp
+modprobe gre
+
 printhelp() {
 
 echo "
